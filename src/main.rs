@@ -10,6 +10,9 @@ fn main() -> visa_rs::Result<()>{
   
     // expression to match resource name
     let expr = CString::new("?*").unwrap().into();
+    //let expr = CString::new("TCPIP::rssmb100m101624::hislip0").unwrap().into();
+    //let expr = CString::new("TCPIP::rssmb100m101624::instr").unwrap().into();
+    //let expr = CString::new("tcpip::192.168.1.8::hislip0").unwrap().into();
   
     let mut result =  rm.find_res_list(&expr).unwrap();
     eprintln!("{}", result.find_next().unwrap().unwrap());
