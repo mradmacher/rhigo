@@ -8,20 +8,17 @@ import pyvisa
 import time
 import re
 rm = pyvisa.ResourceManager('@py')
+print(rm.list_resources('?*'))
 
 steps = [
-  ('300000', '8dBm'),
-  ('350000', '9dBm'),
-  ('400000', '10dBm'),
+  ('300000', '9'),
+  ('350000', '10'),
+  ('400000', '11'),
 ]
 
-print(rm.list_resources('?*'))
 rohde_schwarz_name = 'TCPIP::192.168.1.5::INSTR'
 rigol_name = 'TCPIP::192.168.1.11::INSTR'
 rohde_schwarz = rm.open_resource(rohde_schwarz_name)
-# instr.read_termination = '\n'
-# instr.write_termination = '\n'
-# instr.baud_rate = 9600
 idn_result = rohde_schwarz.query('*idn?')
 print(idn_result)
 assert re.match('Rohde&Schwarz', idn_result)
@@ -37,15 +34,26 @@ rohde_schwarz.write('*rst; status:preset; *cls')
 time.sleep(5)
 
 rohde_schwarz.write('syst:disp:upd 1')
-rigol.write('cal:mark:peak:sear:mode max')
 
-print('Start')
+rohde_schwarz.write('outp 1')
+rigol.write('calculate:marker:peak:search:mode maximum')
 for step in steps:
-    rohde_schwarz.write('freq:cw {0}Hz'.format(step[0]))
-    rohde_schwarz.write('sour:pow:lev:imm:ampl {0}'.format(step[1]))
+    print('Rohde&Schwarz: {0}HZ, {1}dBm'.format(step[0], step[1]))
     rigol.write('sens:freq:cent {0}'.format(step[0]))
-    rohde_schwarz.write('outp 1')
-    time.sleep(5)
-    print(rigol.query('fetc:harm:amp:all?'))
-    rohde_schwarz.write('outp 0')
+    rohde_schwarz.write('freq:cw {0}Hz'.format(step[0]))
+    rohde_schwarz.write('sour:pow:lev:imm:ampl {0}dBm'.format(step[1]))
+    time.sleep(3)
+    rigol.write('calculate:marker1:maximum:max')
+    print('Rigol: {0}'.format('?'))
+    print(rigol.query('calculate:marker1:fcount:x?'))
+    print(rigol.query('calculate:marker1:x?'))
+    print(rigol.query('calculate:marker1:y?'))
+    #print(rigol.query('calc:mark:peak:sear:mode?'))
+    #print(rigol.query('calc:mark:peak:exc?'))
+    #print(rigol.query('calc:mark1:max?'))
+    #print(rigol.query('configure?'))
+
+    time.sleep(3)
+
+rohde_schwarz.write('outp 0')
 rohde_schwarz.write('*rst; status:preset; *cls')
