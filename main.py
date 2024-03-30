@@ -50,7 +50,7 @@ inputs = read_inputs('input.csv')
 rohde_schwarz, rigol = discover_rohde_schwarz_and_rigol()
 
 rigol.reset()
-rigol.measure_freq_time_ampt()
+rigol.set_xy_marker()
 rigol.set_auto_trace()
 rigol.set_auto_readout()
 rigol.set_peak_search_max()
@@ -71,7 +71,7 @@ with open(out_filename, 'w', newline='') as csvfile:
         rohde_schwarz.set_rf_level(input.ampt)
         time.sleep(0.5)
 
-        rigol.search_peak_max()
+        rigol.search_marker_peak_max()
         freq = rigol.get_marker_x()
         ampt = rigol.get_marker_y()
         print('Rigol: {0}Hz, {1}dBm'.format(freq, ampt))

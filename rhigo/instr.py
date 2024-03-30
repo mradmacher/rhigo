@@ -11,11 +11,11 @@ class Rigol(Instrument):
         self.resource.write('*cls')
         #print(rigol.write('*rst; status:preset; *cls'))
 
-    def measure_freq_time_ampt(self):
+    def set_xy_marker(self):
         '''Uses normal marker.
 
         It is used to measure the X (Frequency or Time) and Y (Amplitude) values of a certain point on the trace.'''
-        self.resource.write('calculate:marker:mode position')
+        self.resource.write('calculate:marker1:mode position')
     
     def set_auto_trace(self):
         '''Enables the auto trace marking of the specified marker.'''
@@ -46,7 +46,7 @@ class Rigol(Instrument):
         ''' Sets the center frequency. '''
         self.resource.write('sens:frequency:center {0}'.format(value))
 
-    def search_peak_max(self):
+    def search_marker_peak_max(self):
         '''Performs one peak search based on the search mode set by the :CALCulate:MARKer:PEAK:SEARch:MODE
         command and marks it with the specified marker.'''
         self.resource.write('calculate:marker1:maximum:max')
