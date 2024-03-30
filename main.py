@@ -46,15 +46,23 @@ def read_inputs(in_filename):
 
     return inputs
 
+def find_max_level(inputs):
+    max = 0
+    for input in inputs:
+        if input.ampt > max:
+            max = input.ampt
+    return max
+
 inputs = read_inputs('input.csv')
 rohde_schwarz, rigol = discover_rohde_schwarz_and_rigol()
 
 rigol.reset()
-rigol.set_xy_marker()
-rigol.set_auto_trace()
-rigol.set_auto_readout()
 rigol.set_peak_search_max()
+rigol.set_xy_marker()
+rigol.set_marker_trace_auto()
+rigol.set_marker_readout_auto()
 rigol.set_marker_x_readout_freq()
+rigol.set_reference_level(find_max_level(inputs))
 
 rohde_schwarz.reset()
 rohde_schwarz.activate_rf_output()
@@ -82,3 +90,4 @@ with open(out_filename, 'w', newline='') as csvfile:
         time.sleep(2)
 
 rohde_schwarz.deactivate_rf_output()
+rohde_schwarz.reset()
