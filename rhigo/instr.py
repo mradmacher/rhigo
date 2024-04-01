@@ -1,3 +1,6 @@
+import pyvisa
+import re
+
 # Comments on commands are quoted from instrument manuals.
 class Instrument:
     def __init__(self, resource):
@@ -88,5 +91,28 @@ class RohdeSchwarz(Instrument):
     def set_rf_level(self, value):
         ''' Enters the RF level, considering the level offset.'''
         self.resource.write('source:power:level:immediate:amplitude {0}dBm'.format(value))
+
+
+def discover_rohde_schwarz_and_rigol():
+    rm = pyvisa.ResourceManager('@py')
+    resource_names = rm.list_resources('?*')
+    print(resource_names)
+    assert len(resource_names) >= 2
+
+    rohde_schwarz = None
+    rigol = None
+    for name in resource_names:
+        resource = rm.open_resource(name)
+        idn_result = resource.idn()
+        print(idn_result)
+        if re.match('Rohde&Schwarz', idn_result):
+            rohde_schwarz = resource
+        elif re.match('Rigol', idn_result):
+            rigol = resource
+    
+    assert rohde_schwarz
+    assert rigol
+
+    return (rohde_schwarz, rigol)
 
 __version__ = '0.1'

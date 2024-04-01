@@ -1,6 +1,4 @@
-import pyvisa
 import time
-import re
 import csv
 import rhigo.instr
 
@@ -8,25 +6,6 @@ class Input:
     def __init__(self, freq, ampt):
         self.freq = freq
         self.ampt = ampt
-
-def discover_rohde_schwarz_and_rigol():
-    rm = pyvisa.ResourceManager('@py')
-    print(rm.list_resources('?*'))
-
-    rohde_schwarz_name = 'TCPIP::192.168.1.11::INSTR'
-    rigol_name = 'TCPIP::192.168.1.14::INSTR'
-
-    rohde_schwarz = rhigo.instr.RohdeSchwarz(rm.open_resource(rohde_schwarz_name))
-    idn_result = rohde_schwarz.idn()
-    print(idn_result)
-    assert re.match('Rohde&Schwarz', idn_result)
-
-    rigol = rhigo.instr.Rigol(rm.open_resource(rigol_name))
-    idn_result = rigol.idn()
-    print(idn_result)
-    assert re.match('Rigol', idn_result)
-
-    return (rohde_schwarz, rigol)
 
 def read_inputs(in_filename):
     inputs = []
@@ -45,7 +24,7 @@ def find_max_level(inputs):
     return max
 
 inputs = read_inputs('input.csv')
-rohde_schwarz, rigol = discover_rohde_schwarz_and_rigol()
+rohde_schwarz, rigol = rhigo.instr.discover_rohde_schwarz_and_rigol()
 
 rigol.reset()
 rigol.set_peak_search_max()
