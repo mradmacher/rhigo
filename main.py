@@ -1,12 +1,3 @@
-# https://github.com/pyvisa/pyvisa-py
-# https://www.rohde-schwarz.com/webhelp/smb100a_html_usermanual_1/Content/2e097e6397fa40bd.htm#d79403e12303
-# https://www.rekirsch.at/user_html/1282834349/pix/a/media/RSA3030N/RSA3000_ProgrammingGuide_EN.pdf
-
-# pip install pyvisa-py
-# pip install pyusb
-# pip install psutil
-# pip install zeroconf
-
 import pyvisa
 import time
 import re

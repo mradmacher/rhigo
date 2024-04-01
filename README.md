@@ -22,3 +22,8 @@ The program:
 1. Performs measurement.
 1. Writes the result to a `.csv` file which name is based of the time of the measurement start.
   The file has four comma separated columns: input frequency, input amplitude level, output frequency and output amplitude level.
+
+## References
+- https://github.com/pyvisa/pyvisa-py
+- https://www.rigolna.com/products/spectrum-analyzers/rsa3000/
+- https://www.rohde-schwarz.com/us/manual/r-s-smb100a-operating-manual-manuals_78701-29347.html
