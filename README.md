@@ -13,14 +13,14 @@ The Rohde&Schwarz instrument sends signal of given frequency and amplitude, the 
 ## Running
 From the project directory run:
 ```
-python main.py
+python main.py -f input.csv -o output.csv
 ```
 The program:
 1. Detects connected Rohde&Scharz and Rigol instruments.
 1. Read input data from `input.csv` file.
   The file has two comma separated columns without any header. The first columnis a frequency in Hz and the second an amplitude level in dBm.
 1. Performs measurement.
-1. Writes the result to a `.csv` file which name is based of the time of the measurement start.
+1. Writes the result to a `output.csv` file.
   The file has four comma separated columns: input frequency, input amplitude level, output frequency and output amplitude level.
 
 ## References
