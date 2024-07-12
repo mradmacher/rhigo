@@ -62,7 +62,7 @@ with open(args.output, 'w', newline='') as csvfile:
         print('Rigol: {0}Hz, {1}dBm'.format(freq, ampt))
 
         # format(math.pi, '.2f')   # give 2 digits after the point
-        writer.writerow([input.freq, input.ampt, ampt])
+        writer.writerow([input.freq, input.ampt, freq, ampt])
 
         time.sleep(2)
 
