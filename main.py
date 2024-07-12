@@ -1,5 +1,6 @@
 import time
 import csv
+import argparse
 import rhigo.instr
 
 class Input:
@@ -23,7 +24,13 @@ def find_max_level(inputs):
             max = input.ampt
     return max
 
-inputs = read_inputs('input.csv')
+parser = argparse.ArgumentParser(prog='Rhigo')
+parser.add_argument('-f', dest='input', default='input.csv', help='input filename')
+parser.add_argument('-o', dest='output', default='output.csv', help='output filename')
+args = parser.parse_args()
+
+inputs = read_inputs(args.input)
+
 rohde_schwarz, rigol = rhigo.instr.discover_rohde_schwarz_and_rigol()
 
 rigol.reset()
@@ -37,9 +44,9 @@ rigol.set_reference_level(find_max_level(inputs))
 rohde_schwarz.reset()
 rohde_schwarz.activate_rf_output()
 
-out_filename = "{}_out.csv".format(time.strftime("%Y-%m-%d_%H%M%S", time.localtime()))
+# out_filename = "{}_out.csv".format(time.strftime("%Y-%m-%d_%H%M%S", time.localtime()))
 
-with open(out_filename, 'w', newline='') as csvfile:
+with open(args.output, 'w', newline='') as csvfile:
     writer = csv.writer(csvfile, dialect='excel')
 
     for input in inputs:
@@ -55,7 +62,7 @@ with open(out_filename, 'w', newline='') as csvfile:
         print('Rigol: {0}Hz, {1}dBm'.format(freq, ampt))
 
         # format(math.pi, '.2f')   # give 2 digits after the point
-        writer.writerow([input.freq, input.ampt, ampt])
+        writer.writerow([input.freq, input.ampt, freq, ampt])
 
         time.sleep(2)
 

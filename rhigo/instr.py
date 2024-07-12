@@ -96,19 +96,20 @@ class RohdeSchwarz(Instrument):
 def discover_rohde_schwarz_and_rigol():
     rm = pyvisa.ResourceManager('@py')
     resource_names = rm.list_resources('?*')
-    print(resource_names)
+    print('Found resources: ', resource_names)
     assert len(resource_names) >= 2
 
     rohde_schwarz = None
     rigol = None
     for name in resource_names:
         resource = rm.open_resource(name)
-        idn_result = resource.idn()
+        instrument = Instrument(resource)
+        idn_result = instrument.idn()
         print(idn_result)
         if re.match('Rohde&Schwarz', idn_result):
-            rohde_schwarz = resource
+            rohde_schwarz = RohdeSchwarz(resource)
         elif re.match('Rigol', idn_result):
-            rigol = resource
+            rigol = Rigol(resource)
     
     assert rohde_schwarz
     assert rigol
